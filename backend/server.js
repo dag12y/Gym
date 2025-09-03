@@ -1,19 +1,33 @@
-const express=require('express');
-const dotenv=require('dotenv').config();
-const workoutRoutes=require('./routes/workouts')
+const express = require("express");
+const dotenv = require("dotenv").config();
+const workoutRoutes = require("./routes/workouts");
+const mongoose = require("mongoose");
 
-const app=express()
+//Intitalizing express
+const app = express();
 
-app.use(express.json())
+//middleware
+app.use(express.json());
 
-app.use((req,res,next)=>{
-    console.log(req.path,req.method);
-    next()
-})
+app.use((req, res, next) => {
+    console.log(req.path, req.method);
+    next();
+});
 
-app.use('/api/workouts',workoutRoutes)
+//routes
+app.use("/api/workouts", workoutRoutes);
 
-app.listen(process.env.PORT,()=>{
-    console.log(`server is running on port ${process.env.PORT}`);
-    
-})
+//connect to db
+mongoose
+    .connect(process.env.MONGO_URL)
+    .then(() => {
+        console.log("database connected!");
+        // listen for requests
+        app.listen(process.env.PORT, () => {
+            console.log(`server is running on port ${process.env.PORT}`);
+        });
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+
