@@ -1,25 +1,33 @@
-const express=require("express")
+const express = require("express");
+const Workout = require("../models/WorkoutModel");
 
-const router=express.Router()
+const router = express.Router();
 
-router.get('/',(req,res)=>{
-    res.json({message:"Get all workout"})
-})
+router.get("/", (req, res) => {
+    res.json({ message: "Get all workout" });
+});
 
-router.get('/:id',(req,res)=>{
-    res.json({message:"Get all a single workout"})
-})
+router.get("/:id", (req, res) => {
+    res.json({ message: "Get all a single workout" });
+});
 
-router.post('/',(req,res)=>{
-    res.json({message:"post a new workout"})
-})
+router.post("/", async (req, res) => {
+    const { title, load, reps } = req.body;
 
-router.delete('/:id',(req,res)=>{
-    res.json({message:"delete a workout"})
-})
+    try {
+        const workout = await Workout.create({ title, load, reps });
+        res.status(200).json(workout);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
 
-router.patch('/:id',(req,res)=>{
-    res.json({message:"update a workout"})
-})
+router.delete("/:id", (req, res) => {
+    res.json({ message: "delete a workout" });
+});
 
-module.exports=router
+router.patch("/:id", (req, res) => {
+    res.json({ message: "update a workout" });
+});
+
+module.exports = router;
